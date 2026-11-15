@@ -1,0 +1,14 @@
+node_modules/
+*.zip
+*.tgz
+*.log
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+/tests/*-preview.png
+/test-results/
+/playwright-report/
+.DS_Store
+Thumbs.db

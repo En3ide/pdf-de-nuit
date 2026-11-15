@@ -1,0 +1,13 @@
+{
+  "name": "pdf-de-nuit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Extension Edge et Chrome pour lire des PDF en mode sombre ou sépia.",
+  "scripts": {
+    "test": "node tests/pdf-dark.smoke.mjs",
+    "check": "node --check background.js && node --check viewer.mjs"
+  },
+  "devDependencies": { "playwright": "1.65.1" },
+  "engines": { "node": ">=22" }
+}

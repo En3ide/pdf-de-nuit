@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "PDF de nuit",
+  "version": "1.0.0",
+  "description": "Lisez vos PDF en mode sombre ou sépia, avec luminosité, recherche et zoom. Traitement local.",
+  "permissions": ["activeTab"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
+  "action": { "default_title": "Ouvrir avec PDF de nuit" },
+  "background": { "service_worker": "background.js" },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; worker-src 'self';"
+  }
+}

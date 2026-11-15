@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDF de nuit</title>
+  <link rel="stylesheet" href="vendor/web/pdf_viewer.css">
+  <link rel="stylesheet" href="viewer.css">
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="moon" aria-hidden="true">☾</span><div><strong>PDF de nuit</strong><small id="filename">Votre lecture, au calme.</small></div></div>
+    <button id="open-file">Ouvrir un PDF</button>
+    <input id="file" type="file" accept="application/pdf,.pdf" hidden>
+    <div class="appearance">
+      <label>Thème <select id="theme"><option value="dark">Sombre</option><option value="sepia">Sépia</option><option value="light">Clair</option></select></label>
+      <label>Luminosité <input id="brightness" type="range" min="40" max="100" value="90"><output id="brightness-value">90 %</output></label>
+    </div>
+  </header>
+  <section id="welcome">
+    <div class="intro">
+      <span class="eyebrow">UN PEU MOINS DE LUMIÈRE</span>
+      <h1>Vos PDF passent<br>en mode nuit.</h1>
+      <p>Ouvrez un document ou glissez-le dans cette fenêtre.<br>Le traitement reste dans votre navigateur.</p>
+      <button id="choose-file" class="primary">Choisir un fichier PDF</button>
+      <p class="note">L’affichage change, votre fichier reste intact. En mode sombre, les photos et graphiques sont aussi inversés.</p>
+    </div>
+  </section>
+  <form id="url-form">
+    <label for="url">Lien du PDF</label>
+    <input id="url" type="url" placeholder="https://exemple.fr/document.pdf" required>
+    <button id="open-url" type="submit">Ouvrir le lien</button>
+    <button id="hide-url" type="button" hidden>Masquer</button>
+  </form>
+  <nav id="toolbar" aria-label="Navigation du document" hidden>
+    <button id="previous" aria-label="Page précédente">←</button>
+    <label>Page <input id="page" type="number" min="1" value="1"> <span id="pages">/ 0</span></label>
+    <button id="next" aria-label="Page suivante">→</button>
+    <select id="zoom" aria-label="Zoom"><option value="page-width">Largeur de page</option><option value="page-fit">Page entière</option><option value="0.75">75 %</option><option value="1">100 %</option><option value="1.25">125 %</option><option value="1.5">150 %</option><option value="2">200 %</option></select>
+    <form id="find-form" role="search"><input id="find" type="search" placeholder="Rechercher dans le PDF" aria-label="Rechercher dans le PDF"><button type="submit">Suivant</button><span id="matches" aria-live="polite"></span></form>
+  </nav>
+  <p id="status" role="status" aria-live="polite">Prêt à ouvrir un PDF.</p>
+  <main id="document-area" hidden>
+    <div id="viewer-container" tabindex="0" aria-label="Document PDF"><div id="viewer" class="pdfViewer"></div></div>
+  </main>
+  <dialog id="password-dialog">
+    <form id="password-form"><h2>PDF protégé</h2><p id="password-message">Saisissez le mot de passe du document.</p><input id="password" type="password" aria-label="Mot de passe du PDF" required autocomplete="off"><div><button id="cancel-password" type="button">Annuler</button><button type="submit" class="primary">Ouvrir</button></div></form>
+  </dialog>
+  <script type="module" src="viewer.mjs"></script>
+</body>
+</html>

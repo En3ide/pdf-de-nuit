@@ -1,0 +1,14 @@
+* text=auto eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.bcmap binary
+*.wasm binary
+*.pfb binary
+*.ttf binary
+*.icc binary
+# Keep the upstream PDF.js distribution, including license formatting, intact.
+vendor/** -text -whitespace
