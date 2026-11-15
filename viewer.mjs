@@ -17,10 +17,37 @@ let task = null;
 let busy = false;
 let passwordCallback = null;
 let lastSearch = '';
+const MIN_ZOOM = 0.25;
+const MAX_ZOOM = 5;
+const ZOOM_FACTOR = 1.25;
+
+function changeZoom(direction, origin) {
+  if (!viewer.pagesCount) return;
+  const scale = viewer.currentScale;
+  const factor = direction > 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
+  const next = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(scale * factor * 100) / 100));
+  viewer.updateScale({ scaleFactor: next / scale, drawingDelay: 150, origin });
+}
+
+function refreshViewerLayout() {
+  if (!viewer.pagesCount) return;
+  if (['page-width', 'page-fit'].includes($('zoom').value)) viewer.currentScaleValue = $('zoom').value;
+  viewer.update();
+}
+
+function setPanelExpanded(expanded) {
+  $('top-panel').hidden = !expanded;
+  $('toggle-panel').setAttribute('aria-expanded', String(expanded));
+  $('panel-toggle-label').textContent = expanded ? 'Masquer le panneau' : 'Afficher le panneau';
+  $('panel-toggle-icon').textContent = expanded ? '▴' : '▾';
+  requestAnimationFrame(refreshViewerLayout);
+}
+$('toggle-panel').addEventListener('click', () => setPanelExpanded($('top-panel').hidden));
 
 function status(text, error = false) {
   $('status').textContent = text;
   $('status').classList.toggle('error', error);
+  if (error) setPanelExpanded(true);
 }
 
 function setBusy(value) {
@@ -46,6 +73,7 @@ $('brightness').addEventListener('input', appearance);
 async function loadDocument(source, name) {
   if (busy) return;
   setBusy(true);
+  for (const id of ['zoom-out', 'zoom', 'zoom-in']) $(id).disabled = true;
   status('Ouverture du PDF…');
   try {
     viewer.setDocument(null);
@@ -143,6 +171,20 @@ $('url-form').addEventListener('submit', async event => {
 $('hide-url').addEventListener('click', () => { $('url-form').hidden = true; });
 
 eventBus.on('pagesinit', () => { viewer.currentScaleValue = $('zoom').value; });
+eventBus.on('scalechanging', ({ scale, presetValue }) => {
+  const value = presetValue || String(scale);
+  const custom = $('custom-zoom');
+  const preset = [...$('zoom').options].some(option => option !== custom && option.value === value);
+  custom.hidden = preset;
+  if (!preset) {
+    custom.value = value;
+    custom.textContent = `${Math.round(scale * 100)} %`;
+  }
+  $('zoom').value = value;
+  $('zoom').disabled = false;
+  $('zoom-out').disabled = scale <= MIN_ZOOM;
+  $('zoom-in').disabled = scale >= MAX_ZOOM;
+});
 eventBus.on('pagechanging', ({ pageNumber }) => {
   $('page').value = pageNumber;
   $('previous').disabled = pageNumber <= 1;
@@ -157,9 +199,14 @@ $('page').addEventListener('change', () => {
   else $('page').value = viewer.currentPageNumber;
 });
 $('zoom').addEventListener('change', () => { viewer.currentScaleValue = $('zoom').value; });
-window.addEventListener('resize', () => {
-  if (viewer.pdfDocument && ['page-width', 'page-fit'].includes($('zoom').value)) viewer.currentScaleValue = $('zoom').value;
-});
+$('zoom-out').addEventListener('click', () => changeZoom(-1));
+$('zoom-in').addEventListener('click', () => changeZoom(1));
+$('viewer-container').addEventListener('wheel', event => {
+  if (!(event.ctrlKey || event.metaKey) || !event.deltaY || !viewer.pagesCount) return;
+  event.preventDefault();
+  changeZoom(event.deltaY < 0 ? 1 : -1, [event.clientX, event.clientY]);
+}, { passive: false });
+window.addEventListener('resize', refreshViewerLayout);
 $('find-form').addEventListener('submit', event => {
   event.preventDefault();
   const query = $('find').value;
@@ -174,8 +221,15 @@ eventBus.on('updatefindcontrolstate', ({ state, matchesCount }) => {
   else if (matchesCount) $('matches').textContent = `${matchesCount.current} / ${matchesCount.total}`;
 });
 document.addEventListener('keydown', event => {
-  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'f' && !$('toolbar').hidden) {
-    event.preventDefault(); $('find').focus(); $('find').select();
+  if (!(event.ctrlKey || event.metaKey) || event.altKey || $('toolbar').hidden) return;
+  if (['+', '=', '-', '0'].includes(event.key) && viewer.pagesCount) {
+    event.preventDefault();
+    if (event.key === '0') viewer.currentScale = 1;
+    else changeZoom(event.key === '-' ? -1 : 1);
+  } else if (event.key.toLowerCase() === 'f') {
+    event.preventDefault();
+    setPanelExpanded(true);
+    $('find').focus(); $('find').select();
   }
 });
 $('password-form').addEventListener('submit', event => {

@@ -13,9 +13,11 @@ Extension indépendante d’Insta Images. Lecteur PDF local basé sur [PDF.js de
 
 - Cliquer sur l’extension pour ouvrir le lecteur dans un nouvel onglet.
 - Choisir **Ouvrir un PDF** ou glisser un fichier dans la fenêtre. Aucun accès global aux fichiers locaux n’est nécessaire.
+- Le bouton **Masquer le panneau** replie les commandes du haut pour agrandir la zone de lecture. **Afficher le panneau** les rétablit ; le bouton reste accessible lorsque le panneau est fermé.
 - Depuis un PDF sur Internet, cliquer sur l’extension : l’adresse de l’onglet est reprise. Cliquer sur **Ouvrir le lien** et autoriser l’accès au site demandé. Un onglet qui ne contient pas un PDF peut fournir une erreur : utiliser alors le lien direct du fichier.
 - Choisir le thème sombre, sépia ou clair et ajuster la luminosité. Ces deux préférences sont enregistrées localement, sans enregistrer les PDF ni leurs mots de passe.
-- Navigation par page, zoom, sélection et copie de texte, recherche avec **Ctrl+F** puis **Entrée**. Un scan sans couche texte ne permet pas la recherche ; aucun OCR n’est inclus.
+- Zoomer et dézoomer avec les boutons **+ / −**, le menu de **25 % à 500 %**, ou **Ctrl + molette** au-dessus du PDF. Raccourcis : **Ctrl + +**, **Ctrl + −** et **Ctrl + 0** pour revenir à 100 % (remplacer Ctrl par ⌘ sur Mac). Les modes **Largeur de page** et **Page entière** restent disponibles.
+- Navigation par page, sélection et copie de texte, recherche avec **Ctrl+F** puis **Entrée**. Un scan sans couche texte ne permet pas la recherche ; aucun OCR n’est inclus.
 - Les PDF protégés par mot de passe demandent le mot de passe à l’ouverture.
 
 ## Limites et confidentialité
